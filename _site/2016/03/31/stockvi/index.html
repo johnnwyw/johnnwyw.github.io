@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Java Android">
+    <meta name="keyword"  content="coding">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Best Time to Buy and Sell Stock IV - 王有文的博客 | johnnwen Blog</title>
+
+    <link rel="canonical" href="http://johnnwen.github.io/2016/03/31/stockvi/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="http://cdn.staticfile.org/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">wangyw Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-digital-native.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-digital-native.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#算法" title="算法">算法</a>
+                        
+                        <a class="tag" href="/tags/#leetcode" title="leetcode">leetcode</a>
+                        
+                        <a class="tag" href="/tags/#动态规划" title="动态规划">动态规划</a>
+                        
+                        <a class="tag" href="/tags/#c++" title="c++">c++</a>
+                        
+                    </div>
+                    <h1>Best Time to Buy and Sell Stock IV</h1>
+                    
+                    
+                    <h2 class="subheading">leetcode 188</h2>
+                    
+                    <span class="meta">Posted by Johnnwen on March 31, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h2 id="best-time-to-buy-and-sell-stock-iv">Best Time to Buy and Sell Stock IV</h2>
+
+<h5 id="section">题意：</h5>
+
+<p>用一个数组表示股票每天的价格，数组的第i个数表示股票在第i天的价格。最多交易k次，手上最多只能持有一支股票，求最大收益</p>
+
+<h5 id="section-1">代码</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class Solution {
+public:
+	int maxProfit(int k, vector&lt;int&gt;&amp; prices) {
+        if(prices.size() &lt; 2)
+            return 0;
+        //当k大于天数时，就是 Best Time to Buy and Sell Stock II 了，不需要动态规划
+        if(k &gt;= prices.size())
+            return maxProfit2(prices);
+        
+        int n = prices.size();
+        vector&lt;int&gt; temp(k+1,0);
+        vector&lt;vector&lt;int&gt;&gt; local(n,temp);
+        vector&lt;vector&lt;int&gt;&gt; globle(n,temp);
+        for(int i = 1;i&lt;n;i++){
+            int diff = prices[i] - prices[i-1];
+            for(int j = 1;j&lt;=k;j++){
+                local[i][j] = max(globle[i-1][j-1]+diff,local[i-1][j] + diff);
+                globle[i][j] = max(globle[i-1][j],local[i][j]);
+            }
+        }
+        return globle[n-1][k];
+    }
+    
+    int maxProfit2(vector&lt;int&gt; &amp;prices){
+        int maxProfit = 0;
+        for(int i = 1;i&lt;prices.size();i++){
+            int gas = prices[i] - prices[i-1];
+            if(gas &gt; 0){
+                maxProfit += gas;
+            }
+        }
+        return maxProfit;
+
+        
+    }
+};
+
+</code></pre>
+</div>
+
+<h5 id="section-2">分析</h5>
+
+<p>用local[i][j]表示到达第i天时，最多进行j次交易的局部最优解；用global[i][j]表示到达第i天时，最多进行j次的全局最优解。它们二者的关系如下（其中diff = prices[i] – prices[i – 1]）：<br /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>local[i][j] = max(globle[i-1][j-1]+diff,local[i-1][j] + diff);
+globle[i][j] = max(globle[i-1][j],local[i][j]);
+</code></pre>
+</div>
+
+<p><strong>注意：当k大于天数时，就是 Best Time to Buy and Sell Stock II 了，不需要动态规划</strong></p>
+
+<h2 id="section-3">扩充</h2>
+
+<h4 id="best-time-to-buy-and-sell-stock">Best Time to Buy and Sell Stock</h4>
+
+<h5 id="section-4">题意</h5>
+
+<p>Say you have an array for which the ith element is the price of a given stock on day i.<br />
+If you were only permitted to complete at most one transaction (ie, buy one and sell one share of the stock), design an algorithm to find the maximum profit.</p>
+
+<h5 id="section-5">代码</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;&amp; prices) {
+        if(prices.size() &lt; 2)
+        	return 0;
+        int maxProfit = 0;
+        int curMin = prices[0];
+        for(int i = 1;i&lt;prices.size();i++){
+            curMin = min(curMin,prices[i]);
+            maxProfit = max(maxProfit,prices[i] - curMin);
+        }
+        return maxProfit;
+    }
+};
+</code></pre>
+</div>
+
+<h5 id="section-6">分析</h5>
+
+<p>动态规划法。从前向后遍历数组，记录当前出现过的最低价格，作为买入价格，并计算以当天价格出售的收益，作为可能的最大收益，整个遍历过程中，出现过的最大收益就是所求。</p>
+
+<h4 id="best-time-to-buy-and-sell-stock-ii">Best Time to Buy and Sell Stock II</h4>
+
+<h5 id="section-7">题意</h5>
+
+<p>Say you have an array for which the ith element is the price of a given stock on day i. Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times). However, you may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;&amp; prices) {
+        if(prices.size() &lt; 2 )
+            return 0;
+        int profit = 0;
+        vector&lt;int&gt;::iterator it = prices.begin();
+        for(++it;it!=prices.end();it++){
+            int gap = *it-*(it-1);
+            if(gap &gt; 0)
+                profit += gap;
+            
+        }
+        return profit;
+        
+    }
+};
+</code></pre>
+</div>
+
+<h5 id="section-8">分析</h5>
+
+<p>贪心法。从前向后遍历数组，只要当天的价格高于前一天的价格，就算入收益。</p>
+
+<h4 id="best-time-to-buy-and-sell-stock-iii">Best Time to Buy and Sell Stock III</h4>
+
+<h5 id="section-9">题意</h5>
+
+<p>Description: Say you have an array for which the ith element is the price of a given stock on day i. Design an algorithm to find the maximum profit. You may complete at most two transactions. Note: You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;&amp; prices) {
+        if(prices.size() &lt; 2)
+            return 0;
+        
+        int n = (int)prices.size();
+
+        vector&lt;int&gt; preProfit(n,0);
+        vector&lt;int&gt; postProfit(n,0);
+        
+        int curMin = prices[0];
+        for(int i = 1;i &lt; n;i++){
+            curMin = min(curMin,prices[i]);
+            preProfit[i] = max(preProfit[i-1],prices[i] - curMin);
+            
+        }
+        
+        int curMax = prices[n-1];
+        for(int i = n-2;i&gt;=0;i--){
+            curMax = max(curMax,prices[i]);
+            postProfit[i] = max(postProfit[i+1], curMax - prices[i]);
+        }
+        
+        int maxProfit = 0;
+        for(int i = 0; i &lt;n; i++){
+            maxProfit = max(maxProfit,postProfit[i]+preProfit[i]);
+            
+        }
+        
+        
+        return maxProfit;
+        
+    }
+};
+</code></pre>
+</div>
+
+<h5 id="section-10">分析</h5>
+
+<p>动态规划法。以第i天为分界线，计算第i天之前进行一次交易的最大收益preProfit[i]，和第i天之后进行一次交易的最大收益postProfit[i]，最后遍历一遍，max{preProfit[i] + postProfit[i]} (0≤i≤n-1)就是最大收益。第i天之前和第i天之后进行一次的最大收益求法同Best Time to Buy and Sell Stock I。<br /></p>
+
+<p><strong><em>注意：本题就是k=2时，Best Time to Buy and Sell Stock IV的情况</em></strong></p>
+
+<h3 id="best-time-to-buy-and-sell-stock-with-cooldown">Best Time to Buy and Sell Stock with Cooldown</h3>
+
+<h5 id="section-11">题意</h5>
+
+<p>Say you have an array for which the ith element is the price of a given stock on day i.<br /></p>
+
+<p>Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times) with the following restrictions:<br /></p>
+
+<p>You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+After you sell your stock, you cannot buy stock on next day. (ie, cooldown 1 day)</p>
+
+<h5 id="example">Example:</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>prices = [1, 2, 3, 0, 2]
+maxProfit = 3
+transactions = [buy, sell, cooldown, buy, sell]
+</code></pre>
+</div>
+
+<h5 id="section-12">代码</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class Solution {
+public:
+    int maxProfit(vector&lt;int&gt;&amp; prices) {
+         if(prices.size() &lt; 2){
+            return 0;
+            
+        }
+        int curBuy = -prices[0];
+        int curSell = 0;
+        int preSell = 0;
+        int n = prices.size();
+        
+        for(int i = 1;i&lt;n;i++){
+            int temp = curSell;
+            curSell = max(curSell,curBuy + prices[i]);
+            if(i &gt; 1){
+                curBuy = max(curBuy,preSell-prices[i]);
+            }else{
+                 curBuy = max(curBuy,-prices[i]);
+            }
+            preSell = temp;
+        }
+        
+        return curSell;
+        
+    }
+};
+</code></pre>
+</div>
+
+<h5 id="section-13">分析</h5>
+
+<p>curBuy,表示在第i天买入股票所能获得的最大累积收益<br />
+curSell,表示在当天卖出股票所能获得的最大累积收益<br />
+preSell,表示在前一天卖出股票所能获得的最大累积收益<br /></p>
+
+
+
+                <hr>
+
+                
+
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/04/01/git/" data-toggle="tooltip" data-placement="top" title="版本控制工具git">
+                        Next<br>
+                        <span>版本控制工具git</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#算法" title="算法" rel="2">
+                                    算法
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="7">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#动态规划" title="动态规划" rel="2">
+                                    动态规划
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#c++" title="c++" rel="9">
+                                    c++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#非递归" title="非递归" rel="4">
+                                    非递归
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#二叉树" title="二叉树" rel="4">
+                                    二叉树
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#数据结构" title="数据结构" rel="2">
+                                    数据结构
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://saberzun.github.io">遵达</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "johnnwen";
+    var disqus_identifier = "/2016/03/31/stockvi";
+    var disqus_url = "http://johnnwen.github.io/2016/03/31/stockvi/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/johnnwen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/johnnwen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/johnnwen2016">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/wenlovexx">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; wangyw Blog 2016
+                    <br>
+                    Theme © <a href="http://johnnwen.github.io">wangyouwen</a> 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- Highlight.js -->
+<script>
+    async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+        hljs.initHighlightingOnLoad();
+    })
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+<link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+
+<!--fastClick.js -->
+<script>
+    async("http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        // var $nav = document.querySelector("nav");
+        // if($nav) FastClick.attach($nav);
+
+        // global FastClick!!
+        FastClick.attach(document.body);    
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,1276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wangyw Blog</title>
+    <description>Java Android</description>
+    <link>http://johnnwen.github.io/</link>
+    <atom:link href="http://johnnwen.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Thu, 07 Apr 2016 10:33:13 +0800</pubDate>
+    <lastBuildDate>Thu, 07 Apr 2016 10:33:13 +0800</lastBuildDate>
+    <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>Maximum Product of Word Lengths </title>
+        <description>&lt;h3 id=&quot;section&quot;&gt;318. 测试&lt;/h3&gt;
+
+&lt;h5 id=&quot;section-1&quot;&gt;题意&lt;/h5&gt;
+
+&lt;p&gt;。。。。。。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 05 Apr 2016 20:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/05/%E6%B5%8B%E8%AF%951111/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/05/%E6%B5%8B%E8%AF%951111/</guid>
+        
+        <category>test</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Maximum Product of Word Lengths </title>
+        <description>&lt;h3 id=&quot;maximum-product-of-word-lengths&quot;&gt;318. Maximum Product of Word Lengths[译]&lt;/h3&gt;
+
+&lt;h5 id=&quot;section&quot;&gt;题意&lt;/h5&gt;
+
+&lt;p&gt;Given a string array words, find the maximum value of length(word[i]) * length(word[j]) where the two words do not share common letters. You may assume that each word will contain only lower case letters. If no such two words exist, return 0.&lt;/p&gt;
+
+&lt;h5 id=&quot;example&quot;&gt;Example&lt;/h5&gt;
+
+&lt;p&gt;Example 1:
+Given [“abcw”, “baz”, “foo”, “bar”, “xtfn”, “abcdef”]
+Return 16
+The two words can be “abcw”, “xtfn”.&lt;/p&gt;
+
+&lt;p&gt;Example 2:
+Given [“a”, “ab”, “abc”, “d”, “cd”, “bcd”, “abcd”]
+Return 4
+The two words can be “ab”, “cd”.&lt;/p&gt;
+
+&lt;p&gt;Example 3:
+Given [“a”, “aa”, “aaa”, “aaaa”]
+Return 0
+No such pair of words.&lt;/p&gt;
+
+&lt;h4 id=&quot;section-1&quot;&gt;解法一&lt;/h4&gt;
+
+&lt;h5 id=&quot;section-2&quot;&gt;分析&lt;/h5&gt;
+
+&lt;p&gt;题目中说都是小写字母，那么只有26位，一个整型数int有32位，可以用后26位来对应26个字母，若为1，说明该对应位置的字母出现过，那么每个单词的都可由一个int数字表示，两个单词没有共同字母的条件是这两个int数进行与操作后结果为0&lt;/p&gt;
+
+&lt;h5 id=&quot;section-3&quot;&gt;代码&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution{
+public:
+    int maxProduct(vector&amp;lt;string&amp;gt;&amp;amp; words){
+       	int size = (int)words.size();
+        vector&amp;lt;int&amp;gt;mask(size,0);
+        int res = 0;
+        for(int i = 0;i&amp;lt;size;i++){
+            for(char c:words[i])
+                mask[i] |= 1 &amp;lt;&amp;lt; (c-&#39;a&#39;);
+            
+            for(int j = 0;j &amp;lt; i;j++){
+                if(!(mask[i]&amp;amp;mask[j])){
+                    res = max(res,int(words[i].size()*words[j].size()));
+                }
+            }
+            
+        }
+        return res;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;section-4&quot;&gt;解法一&lt;/h4&gt;
+
+&lt;h5 id=&quot;section-5&quot;&gt;分析&lt;/h5&gt;
+
+&lt;p&gt;借助哈希表，映射每个mask的值和其单词的长度，每算出一个单词的mask，如果其值（单词长度）大于当前值，就更新哈希表里的值，然后遍历哈希表，如果当前单词的mask值和哈希表中的mask值进行与操作后结果为0，则将当前单词的长度和哈希表中存的单词长度相乘并更新结果。&lt;/p&gt;
+
+&lt;h5 id=&quot;section-6&quot;&gt;代码&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution{
+public:
+    int maxProduct(vector&amp;lt;string&amp;gt;&amp;amp; words){
+        int res = 0;
+        map&amp;lt;int, int&amp;gt; map;
+        for(auto word:words){
+            int mask = 0;
+            for(char c:word)
+                mask = 1 &amp;lt;&amp;lt; (c-&#39;a&#39;);
+            map[mask] = max(map[mask],int(word.size()));
+            for(auto a:map){
+                if(!(a.first)&amp;amp;mask)
+                    res = max(res,int(word.size()*a.second));
+            }
+                
+        }
+        
+        return res;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/grandyang/p/5090058.html&quot;&gt;参考资料&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Tue, 05 Apr 2016 16:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/05/maximum_product_of_word_lengths-%E8%AF%91/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/05/maximum_product_of_word_lengths-%E8%AF%91/</guid>
+        
+        <category>leetcode</category>
+        
+        <category>位运算</category>
+        
+        <category>数据结构</category>
+        
+        <category>c++</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>IOC 容器中Bean的生命周期 </title>
+        <description>&lt;h3 id=&quot;ioc-bean&quot;&gt;IOC 容器中Bean的生命周期&lt;/h3&gt;
+
+&lt;h5 id=&quot;spring-ioc-bean&quot;&gt;Spring IOC 容器可以管理Bean的生命周期&lt;/h5&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Spring允许在Bean生命周期的特定执行点知性定制的任务&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h5 id=&quot;springbean&quot;&gt;Spring容器对Bean的生命周期进行管理的过程：&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;通过构造器或工厂方法创建Bean实例&lt;/li&gt;
+  &lt;li&gt;为Bean的属性设置值和对其他Bean的引用&lt;/li&gt;
+  &lt;li&gt;调用Bean的初始化方法&lt;/li&gt;
+  &lt;li&gt;Bean可以使用&lt;/li&gt;
+  &lt;li&gt;当容器关闭时，调用Bean的销毁方法&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;beaninit-methoddestroy-methodbean&quot;&gt;在Bean的声明里设置init-method和destroy-method属性，为Bean指定初始化和销毁方法&lt;/h5&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;主要代码如下&lt;/h3&gt;
+
+&lt;h5 id=&quot;spring&quot;&gt;Spring配置文件&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;beans&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.springframework.org/schema/beans&quot;&lt;/span&gt;
+	&lt;span class=&quot;na&quot;&gt;xmlns:xsi=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&lt;/span&gt;
+	&lt;span class=&quot;na&quot;&gt;xsi:schemaLocation=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+	&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id =&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;car&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;com.wyw.spring.cycle.Car&quot;&lt;/span&gt;
+		&lt;span class=&quot;na&quot;&gt;init-method=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;init&quot;&lt;/span&gt;
+		&lt;span class=&quot;na&quot;&gt;destroy-method=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;destroy&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+		&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;brand&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Audi&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/beans&amp;gt;&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;car&quot;&gt;Car类&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class Car {
+	private String brand;
+
+	public Car() {
+		System.out.println(&quot;Car&#39;s Constructor&quot;);
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		System.out.println(&quot;setbrand&quot;);
+		this.brand = brand;
+	}
+	
+	public void init(){
+		System.out.println(&quot;init&quot;);
+	}
+	public void destroy(){
+		System.out.println(&quot;destrory&quot;);
+	}
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;section-1&quot;&gt;测试类&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;public class Main {
+
+	public static void main(String[] args) {
+		
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(&quot;beans-cycle.xml&quot;);
+		Car car = (Car)ctx.getBean(&quot;car&quot;);
+		
+		System.out.println(car);
+		//关闭IOC容器
+		ctx.close();
+
+	}
+
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;section-2&quot;&gt;控制台输出&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+Car&#39;s Constructor
+setbrand
+init
+com.wyw.spring.cycle.Car@3e228ba7
+destrory
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;bean&quot;&gt;创建Bean后置处理器&lt;/h3&gt;
+
+&lt;h5 id=&quot;beanbean&quot;&gt;Bean后置处理器允许在调用初始化方法前后对Bean进行额外的处理&lt;/h5&gt;
+
+&lt;h5 id=&quot;beaniocbean&quot;&gt;Bean后置处理器对IOC容器里的所有Bean实例逐一的处理（而不是单一实例）&lt;/h5&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;其典型的应用是：检查Bean属性的正确性或根据特定的标准更改Bean属性&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h5 id=&quot;beaninterface-beanpostprocessorspringbean&quot;&gt;对Bean后置处理器而言，需要实现Interface BeanPostProcessor接口，在初始化方法别调用前，Spring将把每一个Bean实例分别传递给上述接口的一下两个方法：&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+postProcessAfterInitialization(Object bean, String beanName) :init－method之后被调用
+postProcessBeforeInitialization(Object bean, String beanName) :init－method之前被调用
+	
+	bean：bean实例本身
+	beanName：IOC容器配置的bean名字
+	返回值是实际上返回给用户的Bean， 
+	
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;　&lt;strong&gt;&lt;em&gt;注意：可以在以上的两个方法中修改返回的Bean，甚至返回一个新的Bean&lt;/em&gt;&lt;/strong&gt;
+ 　&lt;/p&gt;
+
+&lt;h5 id=&quot;bean-1&quot;&gt;添加Bean后置处理器的生命周期&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;通过构造器或工厂方法创建Bean实例&lt;/li&gt;
+  &lt;li&gt;为Bean的属性设置值和对其他Bean的引用&lt;/li&gt;
+  &lt;li&gt;将Bean实例传递给Bean后置处理器的postProcessBeforeInitialization方法&lt;/li&gt;
+  &lt;li&gt;调用Bean的初始化方法&lt;/li&gt;
+  &lt;li&gt;将Bean实例传递给Bean后置处理器的postProcessBeforeInitialization方法&lt;/li&gt;
+  &lt;li&gt;Bean可以使用&lt;/li&gt;
+  &lt;li&gt;当容器关闭时，调用Bean的销毁方法&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;主要代码如下&lt;/h3&gt;
+
+&lt;h5 id=&quot;spring-1&quot;&gt;Spring配置文件&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;beans&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.springframework.org/schema/beans&quot;&lt;/span&gt;
+	&lt;span class=&quot;na&quot;&gt;xmlns:xsi=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&lt;/span&gt;
+	&lt;span class=&quot;na&quot;&gt;xsi:schemaLocation=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+
+	&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id =&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;car&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;com.wyw.spring.cycle.Car&quot;&lt;/span&gt;
+		&lt;span class=&quot;na&quot;&gt;init-method=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;init&quot;&lt;/span&gt;
+		&lt;span class=&quot;na&quot;&gt;destroy-method=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;destroy&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+		&lt;span class=&quot;nt&quot;&gt;&amp;lt;property&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;brand&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Audi&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/property&amp;gt;&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+	
+	&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- 配置Bean的后置处理器 ，不需要配置id,IOC自动识别是一个BeanPostProcessor--&amp;gt;&lt;/span&gt;
+	&lt;span class=&quot;c&quot;&gt;&amp;lt;!-- 实现BeanPostProcessor接口，并提供
+	postProcessAfterInitialization(Object bean, String beanName) :init－method之后被调用
+	postProcessBeforeInitialization(Object bean, String beanName) :init－method之前被调用
+	的实现
+	
+	bean：bean实例本身
+	beanName：IOC容器配置的bean名字
+	返回值是实际上返回给用户的Bean，注意：可以在以上的两个方法中修改返回的Bean，甚至返回一个新的Bean
+	 --&amp;gt;&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;&amp;lt;bean&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;com.wyw.spring.cycle.MyBeanPostProcessor&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;&amp;lt;/bean&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/beans&amp;gt;&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;beanpostprocessor&quot;&gt;实现BeanPostProcessor接口的类&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+
+public class MyBeanPostProcessor implements BeanPostProcessor{
+
+	@Override
+	public Object postProcessAfterInitialization(Object bean, String beanName)
+			throws BeansException {
+		System.out.println(&quot;postProcessAfterInitialization:&quot;+bean+&quot;,&quot;+beanName);
+		if(&quot;car&quot;.equals(beanName)){
+			
+		}
+		return bean;
+	}
+
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName)
+			throws BeansException {
+		System.out.println(&quot;postProcessBeforeInitialization:&quot;+bean+&quot;,&quot;+beanName);
+		Car car = new Car();
+		car.setBrand(&quot;BenChi&quot;);
+		return car;
+	}	
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;section-4&quot;&gt;控制台输出&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Car&#39;s Constructor
+setbrand
+postProcessBeforeInitialization:Car [brand=Audi],car
+Car&#39;s Constructor
+setbrand
+init
+postProcessAfterInitialization:Car [brand=BenChi],car
+Car [brand=BenChi]
+destrory
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Mon, 04 Apr 2016 20:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/04/ioc_%E5%AE%B9%E5%99%A8%E4%B8%ADbean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/04/ioc_%E5%AE%B9%E5%99%A8%E4%B8%ADbean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/</guid>
+        
+        <category>Spring</category>
+        
+        <category>Java</category>
+        
+        <category>后台开发框架</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>最大子序列&amp;最长公共子串&amp;最长公共子序列 </title>
+        <description>&lt;h3 id=&quot;section&quot;&gt;1、最大子序列和&lt;/h3&gt;
+
+&lt;h5 id=&quot;section-1&quot;&gt;题意&lt;/h5&gt;
+
+&lt;p&gt;最大子序列和是要找出由数组成的一维数组中和最大的连续子序列。&lt;/p&gt;
+
+&lt;h5 id=&quot;section-2&quot;&gt;例如&lt;/h5&gt;
+&lt;p&gt;[www.baidu.com]&lt;/p&gt;
+
+&lt;p&gt;{5,-3,4,2}的最大子序列就是 {5,-3,4,2}，它的和是8,达到最大；而 {5,-6,4,2}的最大子序列是{4,2}，它的和是6。&lt;/p&gt;
+
+&lt;h5 id=&quot;section-3&quot;&gt;分析&lt;/h5&gt;
+
+&lt;p&gt;找最大子序列的方法很简单，扫描数组，当前子序列的和temp_sum，若这个和不断增加，那么最大子序列的和max也不断增加(不断更新max)。如果往前扫描中遇到负数，那么当前子序列的和将会减小。此时temp_sum 将会小于max，当然max也就不更新。如果temp_sum降到0时，说明前面已经扫描的那一段就可以抛弃了，这时将temp_sum置为0。然后，temp_sum将从后面开始将这个子段进行分析，若有比当前max大的子段，继续更新max。这样一趟扫描结果也就出来了&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    int max_sub(vector&amp;lt;int&amp;gt;&amp;amp; vector)
+    {
+        int max=0,temp_sum=0;
+        for(int i=0;i&amp;lt;vector.size();i++)
+        {
+            temp_sum+=vector[i];
+            if(temp_sum&amp;gt;max)
+                max=temp_sum;
+            else if(temp_sum&amp;lt;0)
+                temp_sum=0;
+        }
+        return max;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-4&quot;&gt;2、最长公共子串&lt;/h3&gt;
+
+&lt;h5 id=&quot;section-5&quot;&gt;题意&lt;/h5&gt;
+
+&lt;p&gt;找两个字符串的最长公共子串，这个子串要求在原字符串中是连续的。&lt;/p&gt;
+
+&lt;h5 id=&quot;section-6&quot;&gt;例如&lt;/h5&gt;
+
+&lt;p&gt;“bab”和”caba”的最长公共子串的长度为2&lt;/p&gt;
+
+&lt;h5 id=&quot;section-7&quot;&gt;分析&lt;/h5&gt;
+
+&lt;p&gt;动态规划求解。我们采用一个二维矩阵来记录中间的结果。这个二维矩阵如下所示：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;　　 b　　a　　b
+c　　0　　0　　0
+a　　0　　1　　0
+b　　1　　0　　1
+a　　0　　1　　0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;矩阵的斜对角线最长的那个就是最长公共子串。
+但是在二维矩阵上找最长的由1组成的斜对角线比较费时的，下面改进：矩阵所在位置的横纵坐标相等时，让它等于其左上角元素加1。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;　　 b　　a　　b
+c　　0　　0　　0
+a　　0　　1　　0
+b　　1　　0　　2
+a　　0　　2　　0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这样矩阵中的最大元素就是最长公共子串的长度。&lt;/p&gt;
+
+&lt;h4 id=&quot;section-8&quot;&gt;代码&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#define MAX 1000
+int res[MAX][MAX];
+
+
+class Solution {
+public:
+    int  lcString(string str1,string str2) {
+        int i = 0, j = 0;
+        int maxlengh = 0;
+        for(i = 0; i &amp;lt; str1.size(); ++i)
+        {
+            for(j = 0; j &amp;lt; str2.size(); ++j) //res[i][j]为最长公共子串的长度
+            {
+                if(str1[i] == str2[j]){
+                    res[i + 1][j + 1] = res[i][j] + 1;
+                    maxlengh = max(maxlengh,res[i + 1][j + 1]);
+                }
+            }
+        }
+        
+        return maxlengh;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;lcs&quot;&gt;3、最长公共子序列(LCS)&lt;/h3&gt;
+
+&lt;h5 id=&quot;section-9&quot;&gt;题意&lt;/h5&gt;
+
+&lt;p&gt;最长公共子序列与最长公共子串的区别在于最长公共子序列不要求在原字符串中是连续的&lt;/p&gt;
+
+&lt;h5 id=&quot;section-10&quot;&gt;例如&lt;/h5&gt;
+
+&lt;p&gt;ADE和ABCDE的最长公共子序列是ADE,其长度是3。&lt;/p&gt;
+
+&lt;h5 id=&quot;section-11&quot;&gt;分析&lt;/h5&gt;
+
+&lt;p&gt;动态规划法，引进一个二维数组res[][]，用res[i][j]记录X[i]与Y[j] 的LCS 的长度，在计算res[i,j]之前，c[i-1][j-1]，c[i-1][j]与c[i][j-1]均已计算出来。此时我们根据X[i] = Y[j]还是X[i] != Y[j]，就可以计算出c[i][j]。&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;问题的递归式写成：&lt;/p&gt;
+
+&lt;h5 id=&quot;section-12&quot;&gt;代码&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+#define MAX 1000
+int res[MAX][MAX];
+
+class Solution {
+public:
+    int  lcSubsequence(string str1,string str2) {
+        int i = 0, j = 0;
+        for(i = 0; i &amp;lt; str1.size(); ++i)
+        {
+            for(j = 0; j &amp;lt; str2.size(); ++j) //res[i][j]为最长公共子序列的长度
+            {
+                if(str1[i] != str2[j])
+                    res[i + 1][j + 1] = max(res[i + 1][j], res[i][j + 1]);
+                else
+                    res[i + 1][j + 1] = res[i][j] + 1;
+            }
+        }
+
+        return res[i][j];
+        
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;section-13&quot;&gt;扩展&lt;/h2&gt;
+
+&lt;h3 id=&quot;section-14&quot;&gt;1、回文字符串&lt;/h3&gt;
+
+&lt;h5 id=&quot;section-15&quot;&gt;题意&lt;/h5&gt;
+
+&lt;p&gt;回文字符串，即从左到右读和从右到左读是完全一样的字符串，比如”asdsa”。当然，给定一个字符串，可在任意位置添加字符，现在要求最少再添加几个字符，可以使这个字符串成为回文字符串。&lt;/p&gt;
+
+&lt;h5 id=&quot;section-16&quot;&gt;思路分析&lt;/h5&gt;
+
+&lt;p&gt;最长公共子序列的变种，将原序列str倒置后得到tmp。求出最长公共子序列的长度，则公共子序列就是回文字串，剩下的就是没有匹配字符的个数。用字符串的总长度减去最长公共子序列的长度，即得到需要添加的字符数量。&lt;/p&gt;
+
+&lt;h5 id=&quot;section-17&quot;&gt;代码&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+#define MAX 1000
+int res[MAX][MAX];
+
+class Solution {
+public:
+    int  palindromeString(string str) {
+        int i = 0, j = 0;
+        string tmp;
+        tmp = str;
+        reverse(tmp.begin(), tmp.end()); //倒置
+        for(i = 0; i &amp;lt; str.size(); ++i)
+        {
+            for(j = 0; j &amp;lt; tmp.size(); ++j) //res[i][j]为最长公共子序列的长度
+            {
+                if(str[i] != tmp[j])
+                    res[i + 1][j + 1] = max(res[i + 1][j], res[i][j + 1]);
+                else
+                    res[i + 1][j + 1] = res[i][j] + 1;
+            }
+        }
+
+        return (int)(str.size() - res[i][j]);
+        
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;section-18&quot;&gt;2、最长回文字符串&lt;/h3&gt;
+
+&lt;h5 id=&quot;section-19&quot;&gt;题意&lt;/h5&gt;
+
+&lt;p&gt;输出字符串中的最长回文字符串&lt;/p&gt;
+
+&lt;h5 id=&quot;section-20&quot;&gt;例如&lt;/h5&gt;
+
+&lt;p&gt;输入字符串 “google”，由于该字符串里最长的对称子字符串是 “goog”，因此输出4。&lt;/p&gt;
+
+&lt;h5 id=&quot;section-21&quot;&gt;分析&lt;/h5&gt;
+
+&lt;p&gt;最长公共子串的变种，将原序列str倒置后得到tmp。求出最长公共子串的长度，则公共子串的长度就是回文字串的长度。&lt;/p&gt;
+
+&lt;h5 id=&quot;section-22&quot;&gt;代码&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+class Solution {
+public:
+    int  palindromeString(string str) {
+        int i = 0, j = 0,maxlengh=0;
+        string tmp;
+        tmp = str;
+        reverse(tmp.begin(), tmp.end()); //倒置
+        for(i = 0; i &amp;lt; str.size(); ++i)
+        {
+            for(j = 0; j &amp;lt; tmp.size(); ++j) //res[i][j]为最长公共子序列的长度
+            {
+                if(str[i] == tmp[j]){
+
+                    res[i + 1][j + 1] = res[i][j] + 1;
+                    maxlengh = max(maxlengh,res[i + 1][j + 1]);
+                }
+            }
+        }
+        
+        return maxlengh;
+        
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Mon, 04 Apr 2016 16:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/04/%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%88%97_%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2_%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/04/%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%88%97_%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2_%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/</guid>
+        
+        <category>字符串</category>
+        
+        <category>动态规划</category>
+        
+        <category>LCS</category>
+        
+        <category>DP</category>
+        
+        <category>数据结构</category>
+        
+        <category>c++</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>蛇形矩阵</title>
+        <description>&lt;h2 id=&quot;nn&quot;&gt;给定一整数n,输出n阶蛇形巨阵的如下形式&lt;/h2&gt;
+
+&lt;h4 id=&quot;section&quot;&gt;例如&lt;/h4&gt;
+
+&lt;p&gt;三阶蛇形巨阵如下所示&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1 2 3
+8 9 4
+7 6 5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;则输出&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1 2 3 8 9 4 7 6 5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;代码如下&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;
+#include &amp;lt;vector&amp;gt;
+using namespace std;
+
+int  main(int argc, const char * argv[]) {
+    int n =0;
+    cin&amp;gt;&amp;gt;n;
+    int beginX = 0;
+    int beginY = 0;
+    int endX = n-1;
+    int endY = n-1;
+    int count = 1;
+    int **p= new int*[n];
+    for(int i=0;i&amp;lt;n;i++)
+    {
+        p[i]=new int[n];
+    }
+    
+    while(true){
+        for(int i = beginX;i&amp;lt;=endX;i++){
+            p[beginY][i] = count;
+            count++;
+            
+        }
+        
+        beginY++;
+        if(beginY &amp;gt; endY){
+            break;
+        }
+        
+        
+        for(int i = beginY;i&amp;lt;=endY;i++){
+            p[i][endX] = count;
+            count++;
+        }
+        
+        endX--;
+        if(beginX &amp;gt; endX){
+            break;
+        }
+        
+        for(int i = endX; i&amp;gt;=beginX;i--){
+            p[endY][i] = count;
+            count++;
+        }
+        
+        endY--;
+        if(beginY &amp;gt; endY){
+            break;
+        }
+        for(int i = endY;i&amp;gt;=beginY;i--){
+            p[i][beginX] = count;
+            count++;
+        }
+        beginX++;
+        if(beginX &amp;gt; endX){
+            break;
+        }
+
+    }
+
+
+    for(int i = 0;i &amp;lt; n;i++){
+        for(int j = 0;j&amp;lt;n;j++){
+            cout&amp;lt;&amp;lt;p[i][j]&amp;lt;&amp;lt;&quot; &quot;;
+        }
+    }
+
+    return 0;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sun, 03 Apr 2016 16:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/03/%E8%9B%87%E5%BD%A2%E5%B7%A8%E9%98%B5/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/03/%E8%9B%87%E5%BD%A2%E5%B7%A8%E9%98%B5/</guid>
+        
+        <category>矩阵</category>
+        
+        <category>算法</category>
+        
+        <category>c++</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Same Tree</title>
+        <description>&lt;h2 id=&quot;same-tree&quot;&gt;100. Same Tree&lt;/h2&gt;
+
+&lt;h4 id=&quot;section&quot;&gt;题意&lt;/h4&gt;
+
+&lt;p&gt;Given two binary trees, write a function to check if they are equal or not.&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Two binary trees are considered equal if they are structurally identical and the nodes have the same value.&lt;/p&gt;
+
+&lt;h4 id=&quot;section-1&quot;&gt;递归解法&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    bool isSameTree(TreeNode *p, TreeNode *q) {
+       if(p == NULL&amp;amp;&amp;amp; !q){
+           return true;
+       }
+       if(!p|| !q){
+           return false;
+       }
+       return p-&amp;gt;val == q-&amp;gt;val &amp;amp;&amp;amp; isSameTree(p-&amp;gt;left,q-&amp;gt;left) &amp;amp;&amp;amp; isSameTree(p-&amp;gt;right,q-&amp;gt;right);
+       
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;section-2&quot;&gt;非递归解法&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    bool isSameTree(TreeNode *p, TreeNode *q) {
+        stack&amp;lt;TreeNode*&amp;gt; s;
+        s.push(p);
+        s.push(q);
+
+        while(!s.empty()) {
+            p = s.top(); s.pop();
+            q = s.top(); s.pop();
+
+            if (!p &amp;amp;&amp;amp; !q) continue;
+            if (!p || !q) return false;
+            if (p-&amp;gt;val != q-&amp;gt;val) return false;
+
+            s.push(p-&amp;gt;left);
+            s.push(q-&amp;gt;left);
+
+            s.push(p-&amp;gt;right);
+            s.push(q-&amp;gt;right);
+        }
+        return true;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sun, 03 Apr 2016 00:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/03/same_tree/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/03/same_tree/</guid>
+        
+        <category>非递归</category>
+        
+        <category>leetcode</category>
+        
+        <category>二叉树</category>
+        
+        <category>c++</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Invert Binary Tree</title>
+        <description>&lt;h2 id=&quot;invert-binary-tree&quot;&gt;226. Invert Binary Tree&lt;/h2&gt;
+
+&lt;h4 id=&quot;section&quot;&gt;题意&lt;/h4&gt;
+
+&lt;p&gt;Invert a binary tree.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;to&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;section-1&quot;&gt;递归解法&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if(root == NULL){
+            return NULL;
+        }
+     
+        TreeNode* pTempNode = root-&amp;gt;left;
+        root-&amp;gt;left = invertTree(root-&amp;gt;right);
+        root-&amp;gt;right = invertTree(pTempNode);
+        return root;
+
+        
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;section-2&quot;&gt;非递归解法&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        queue&amp;lt;TreeNode*&amp;gt; queue;
+        if (root == NULL)  
+            return NULL;  
+        queue.push(root);  
+        while(!queue.empty()){  
+            TreeNode * pNode = queue.front();  
+            queue.pop();  
+            TreeNode * pLeft = pNode-&amp;gt;left;  
+            pNode-&amp;gt;left = pNode-&amp;gt;right;  
+            pNode-&amp;gt;right = pLeft;  
+            if (pNode-&amp;gt;left)  
+                queue.push(pNode-&amp;gt;left);  
+            if (pNode-&amp;gt;right)  
+                queue.push(pNode-&amp;gt;right);  
+        }  
+        return root;
+        
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sat, 02 Apr 2016 22:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/02/invert_binary_tree/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/02/invert_binary_tree/</guid>
+        
+        <category>非递归</category>
+        
+        <category>leetcode</category>
+        
+        <category>二叉树</category>
+        
+        <category>c++</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Maximum Depth of Binary Tree</title>
+        <description>&lt;h2 id=&quot;maximum-depth-of-binary-tree&quot;&gt;104. Maximum Depth of Binary Tree&lt;/h2&gt;
+
+&lt;h4 id=&quot;section&quot;&gt;题意&lt;/h4&gt;
+
+&lt;p&gt;Given a binary tree, find its maximum depth.&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.&lt;/p&gt;
+
+&lt;h4 id=&quot;section-1&quot;&gt;递归解法&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root == NULL) return 0;  
+        return max(maxDepth(root-&amp;gt;left), maxDepth(root-&amp;gt;right))+1;  
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;section-2&quot;&gt;非递归解法&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root == NULL)  
+            return 0;  
+        else root-&amp;gt;val = 1;  
+        queue&amp;lt;TreeNode*&amp;gt; q;  
+        q.push(root);  
+        while(!q.empty())  
+        {  
+            TreeNode* curNode = q.front();  
+            q.pop();  
+            if(q.empty() &amp;amp;&amp;amp; !curNode-&amp;gt;left &amp;amp;&amp;amp; !curNode-&amp;gt;right)  
+                return curNode-&amp;gt;val;  
+            if(curNode-&amp;gt;left)  
+            {  
+                curNode-&amp;gt;left-&amp;gt;val = curNode-&amp;gt;val+1;  
+                q.push(curNode-&amp;gt;left);  
+            }  
+            if(curNode-&amp;gt;right)  
+            {  
+                curNode-&amp;gt;right-&amp;gt;val = curNode-&amp;gt;val+1;  
+                q.push(curNode-&amp;gt;right);  
+            }  
+        } 
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Sat, 02 Apr 2016 20:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/02/maximum_depth_of_binary_tree/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/02/maximum_depth_of_binary_tree/</guid>
+        
+        <category>非递归</category>
+        
+        <category>leetcode</category>
+        
+        <category>二叉树</category>
+        
+        <category>c++</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Binary Tree Traversal</title>
+        <description>&lt;h2 id=&quot;binary-tree-preorder-traversal&quot;&gt;144.Binary Tree Preorder Traversal&lt;/h2&gt;
+
+&lt;h4 id=&quot;section&quot;&gt;题意&lt;/h4&gt;
+
+&lt;p&gt;Given a binary tree, return the preorder traversal of its nodes’ values.&lt;/p&gt;
+
+&lt;h4 id=&quot;for-example&quot;&gt;For example:&lt;/h4&gt;
+
+&lt;p&gt;Given binary tree {1,#,2,3},&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;return [1,2,3].&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;section-1&quot;&gt;代码&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    vector&amp;lt;int&amp;gt; preorderTraversal(TreeNode* root) {
+        vector&amp;lt;int&amp;gt; result;
+        stack&amp;lt;TreeNode *&amp;gt; stack;
+        if (root != NULL) {
+            stack.push(root);
+        }
+        while (!stack.empty()) {
+            TreeNode * tmpNode = stack.top();
+            stack.pop();
+            result.push_back(tmpNode-&amp;gt;val);
+            
+            if (tmpNode-&amp;gt;right) {
+                stack.push(tmpNode-&amp;gt;right);
+            }
+
+            if (tmpNode-&amp;gt;left) {
+                stack.push(tmpNode-&amp;gt;left);
+            }
+        }
+        return result;
+        
+        
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;section-2&quot;&gt;分析&lt;/h4&gt;
+
+&lt;p&gt;如果用递归算法实现，只需如下代码:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    vector&amp;lt;int&amp;gt; preorderTraversal(TreeNode* root) {
+    	vector&amp;lt;int&amp;gt; result;
+    	if(!root){
+    		return result;
+    	}    	
+    	result.push_back(tmpNode-&amp;gt;val);
+    	if(root-&amp;gt;left)
+    		preorderTraversal(root-&amp;gt;left);
+    	}
+    	if(root-&amp;gt;right){
+    		preorderTraversal(root-&amp;gt;right);
+    	}
+    	return result;    
+    }
+};
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;递归的解法十分简单，然后题目强调不能使用递归实现，非递归实现前序遍历大体思路如下：&lt;br /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1、如果根节点非空，将根节点加入到栈中
+2、如果栈不空，弹出出栈顶节点，将其值加加入vector容器中。
+	如果该节点的右子树不为空，将右子节点加入栈中。
+	如果左子节点不为空，将左子节点加入栈中。
+3、重复第二步，直到栈空。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;binary-tree-inorder-traversal&quot;&gt;94. Binary Tree Inorder Traversal&lt;/h2&gt;
+
+&lt;h4 id=&quot;section-3&quot;&gt;题意&lt;/h4&gt;
+
+&lt;p&gt;Given a binary tree, return the preorder traversal of its nodes’ values.&lt;/p&gt;
+
+&lt;h4 id=&quot;for-example-1&quot;&gt;For example:&lt;/h4&gt;
+
+&lt;p&gt;Given binary tree {1,#,2,3},&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;return [1,3,2].&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;section-4&quot;&gt;代码&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    vector&amp;lt;int&amp;gt; inorderTraversal(TreeNode* root) {
+        stack&amp;lt;TreeNode *&amp;gt; stack;  
+        TreeNode *pnode = root;  
+        vector&amp;lt;int&amp;gt; vector; 
+        while(pnode || !stack.empty()) {  
+            while(pnode) {  
+                stack.push(pnode);  
+                pnode = pnode-&amp;gt;left;  
+            }  
+            if(!stack.empty()) {  
+                pnode = stack.top(); 
+                stack.pop(); 
+                vector.push_back(pnode-&amp;gt;val);  
+                pnode = pnode-&amp;gt;right;  
+            }  
+        }  
+        return vector;  
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;section-5&quot;&gt;分析&lt;/h4&gt;
+
+&lt;p&gt;如果用递归算法实现，只需如下代码:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    vector&amp;lt;int&amp;gt; preorderTraversal(TreeNode* root) {
+    	vector&amp;lt;int&amp;gt; result;
+    	if(!root){
+    		return result;
+    	}    	
+    	if(root-&amp;gt;left)
+    		preorderTraversal(root-&amp;gt;left);
+    	}
+    	result.push_back(tmpNode-&amp;gt;val);
+    	if(root-&amp;gt;right){
+    		preorderTraversal(root-&amp;gt;right);
+    	}
+    	return result;    
+    }
+};
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;递归的解法十分简单，然后同上题一样题目强调不能使用递归实现，非递归实现前序遍历大体思路如下：&lt;br /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1、如果根节点空，则直接返回空的vector
+2、左子树压栈操作（如果左子树非空，一直执行压栈操作，直到左子树为空）
+3、如果栈不空，弹出栈顶节点，将其值加入vector容器中，并且遍历当前节点的右子树。
+4、重复第2、3步。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;binary-tree-postorder-traversal&quot;&gt;145. Binary Tree Postorder Traversal&lt;/h2&gt;
+
+&lt;h4 id=&quot;section-6&quot;&gt;题意&lt;/h4&gt;
+
+&lt;p&gt;Given a binary tree, return the preorder traversal of its nodes’ values.&lt;/p&gt;
+
+&lt;h4 id=&quot;for-example-2&quot;&gt;For example:&lt;/h4&gt;
+
+&lt;p&gt;Given binary tree {1,#,2,3},&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;return [3,2,1].&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;section-7&quot;&gt;代码&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    vector&amp;lt;int&amp;gt; postorderTraversal(TreeNode* root) {
+        vector&amp;lt;int&amp;gt; restor;
+        stack&amp;lt;TreeNode *&amp;gt; stack;
+        TreeNode *temp = root, *lastVisited = NULL;
+        while(temp || !stack.empty()){
+            while (temp) {
+                stack.push(temp);
+                temp = temp-&amp;gt;left;
+            }
+            if(!stack.empty()){
+                temp = stack.top(); 
+                if(temp-&amp;gt;right != NULL &amp;amp;&amp;amp; temp-&amp;gt;right != lastVisited)
+                    temp = temp-&amp;gt;right;
+                else{
+                    stack.pop();
+                    restor.push_back(temp-&amp;gt;val);
+                    lastVisited = temp;
+                    temp = NULL;
+                }
+            }
+
+            
+        }
+        return restor;
+        
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;section-8&quot;&gt;分析&lt;/h4&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1、如果根节点空，则直接返回空的vector容器
+2、左子树压栈操作（如果左子树非空，一直执行压栈操作，直到左子树为空）
+3、如果栈不空，栈顶节点的右子树不空且右子树还没有访问过，则遍历该节点的右子树；否则从栈顶弹出节点，将其值加入vector容器中，设置该节点已被访问标志。
+4、重复第2、3步。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Sat, 02 Apr 2016 18:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/02/binary_tree_preorder_traversal/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/02/binary_tree_preorder_traversal/</guid>
+        
+        <category>非递归</category>
+        
+        <category>leetcode</category>
+        
+        <category>二叉树</category>
+        
+        <category>c++</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Excel Sheet Column Number</title>
+        <description>&lt;h2 id=&quot;excel-sheet-column-number&quot;&gt;Excel Sheet Column Number&lt;/h2&gt;
+
+&lt;h5 id=&quot;section&quot;&gt;题意：&lt;/h5&gt;
+
+&lt;p&gt;Given a column title as appear in an Excel sheet, return its corresponding column number.&lt;/p&gt;
+
+&lt;h5 id=&quot;section-1&quot;&gt;例如&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;A -&amp;gt; 1	
+B -&amp;gt; 2
+C -&amp;gt; 3
+...
+Z -&amp;gt; 26
+AA -&amp;gt; 27
+AB -&amp;gt; 28 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;section-2&quot;&gt;代码如下&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+    int titleToNumber(string s) {
+	    int sum = 0;  
+    	for (int i = 0; i &amp;lt; s.size(); ++i) {  
+        	//因为&#39;A&#39;是以1开头，因此要“+1”
+        	int temp = s[i] - &#39;A&#39; + 1;
+        	sum = 26 * sum + temp;  
+    	}  
+    	return sum;  
+    
+	}
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;section-3&quot;&gt;分析&lt;/h5&gt;
+
+&lt;p&gt;题目大意就是处理26进制，逐个读入字符串中的每一个字符进行处理转换即可。&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;注意 ：由于下标从1开始而不是从0开始，因此要加一操作&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;leetcodeyou另一道题目&lt;strong&gt;168. Excel Sheet Column Title&lt;/strong&gt;和这道题目互逆，题意如下：&lt;/p&gt;
+
+&lt;h3 id=&quot;excel-sheet-column-title&quot;&gt;Excel Sheet Column Title&lt;/h3&gt;
+
+&lt;p&gt;Given a non-zero positive integer, return its corresponding column title as appear in an Excel sheet.&lt;/p&gt;
+
+&lt;h5 id=&quot;for-example&quot;&gt;For example:&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1 -&amp;gt; A
+2 -&amp;gt; B
+3 -&amp;gt; C
+...
+26 -&amp;gt; Z
+27 -&amp;gt; AA
+28 -&amp;gt; AB 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;section-4&quot;&gt;代码如下&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Solution {
+public:
+	string convertToTitle(int n) {
+    	string result = &quot;&quot;;
+    	while(n)
+    	{
+        	//由于下标从1开始而不是从0开始，因此要减一操作
+        	int temp = n-1;
+        	result = (char)(temp%26+&#39;A&#39;) + result;
+        	n = temp/26;
+    	}
+    	return result;
+    
+	}
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h5 id=&quot;section-5&quot;&gt;分析&lt;/h5&gt;
+
+&lt;p&gt;题目大意的本质上就是将一个10进制数转换为一个26进制的数。&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;注意 ：由于下标从1开始而不是从0开始，因此要减一操作&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Fri, 01 Apr 2016 18:00:00 +0800</pubDate>
+        <link>http://johnnwen.github.io/2016/04/01/leetcode171/</link>
+        <guid isPermaLink="true">http://johnnwen.github.io/2016/04/01/leetcode171/</guid>
+        
+        <category>leetcode</category>
+        
+        <category>十六进制</category>
+        
+        <category>c++</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

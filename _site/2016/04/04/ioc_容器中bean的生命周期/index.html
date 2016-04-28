@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Java Android">
+    <meta name="keyword"  content="coding">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>IOC 容器中Bean的生命周期  - 王有文的博客 | johnnwen Blog</title>
+
+    <link rel="canonical" href="http://johnnwen.github.io/2016/04/04/ioc_%E5%AE%B9%E5%99%A8%E4%B8%ADbean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="http://cdn.staticfile.org/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">wangyw Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-kuaidi.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-kuaidi.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spring" title="Spring">Spring</a>
+                        
+                        <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                        <a class="tag" href="/tags/#后台开发框架" title="后台开发框架">后台开发框架</a>
+                        
+                    </div>
+                    <h1>IOC 容器中Bean的生命周期 </h1>
+                    
+                    
+                    <h2 class="subheading"> </h2>
+                    
+                    <span class="meta">Posted by Johnnwen on April 4, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h3 id="ioc-bean">IOC 容器中Bean的生命周期</h3>
+
+<h5 id="spring-ioc-bean">Spring IOC 容器可以管理Bean的生命周期</h5>
+
+<blockquote>
+  <p>Spring允许在Bean生命周期的特定执行点知性定制的任务</p>
+</blockquote>
+
+<h5 id="springbean">Spring容器对Bean的生命周期进行管理的过程：</h5>
+
+<ul>
+  <li>通过构造器或工厂方法创建Bean实例</li>
+  <li>为Bean的属性设置值和对其他Bean的引用</li>
+  <li>调用Bean的初始化方法</li>
+  <li>Bean可以使用</li>
+  <li>当容器关闭时，调用Bean的销毁方法</li>
+</ul>
+
+<h5 id="beaninit-methoddestroy-methodbean">在Bean的声明里设置init-method和destroy-method属性，为Bean指定初始化和销毁方法</h5>
+
+<h3 id="section">主要代码如下</h3>
+
+<h5 id="spring">Spring配置文件</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+	<span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+	<span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span><span class="nt">&gt;</span>
+
+	<span class="nt">&lt;bean</span> <span class="na">id =</span> <span class="s">"car"</span> <span class="na">class=</span><span class="s">"com.wyw.spring.cycle.Car"</span>
+		<span class="na">init-method=</span><span class="s">"init"</span>
+		<span class="na">destroy-method=</span><span class="s">"destroy"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"brand"</span> <span class="na">value=</span><span class="s">"Audi"</span><span class="nt">&gt;&lt;/property&gt;</span>
+	<span class="nt">&lt;/bean&gt;</span>
+
+<span class="nt">&lt;/beans&gt;</span>
+
+</code></pre>
+</div>
+
+<h5 id="car">Car类</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>public class Car {
+	private String brand;
+
+	public Car() {
+		System.out.println("Car's Constructor");
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		System.out.println("setbrand");
+		this.brand = brand;
+	}
+	
+	public void init(){
+		System.out.println("init");
+	}
+	public void destroy(){
+		System.out.println("destrory");
+	}
+
+}
+</code></pre>
+</div>
+
+<h5 id="section-1">测试类</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>public class Main {
+
+	public static void main(String[] args) {
+		
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("beans-cycle.xml");
+		Car car = (Car)ctx.getBean("car");
+		
+		System.out.println(car);
+		//关闭IOC容器
+		ctx.close();
+
+	}
+
+}
+
+</code></pre>
+</div>
+
+<h5 id="section-2">控制台输出</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+Car's Constructor
+setbrand
+init
+com.wyw.spring.cycle.Car@3e228ba7
+destrory
+</code></pre>
+</div>
+
+<h3 id="bean">创建Bean后置处理器</h3>
+
+<h5 id="beanbean">Bean后置处理器允许在调用初始化方法前后对Bean进行额外的处理</h5>
+
+<h5 id="beaniocbean">Bean后置处理器对IOC容器里的所有Bean实例逐一的处理（而不是单一实例）</h5>
+
+<blockquote>
+  <p>其典型的应用是：检查Bean属性的正确性或根据特定的标准更改Bean属性</p>
+</blockquote>
+
+<h5 id="beaninterface-beanpostprocessorspringbean">对Bean后置处理器而言，需要实现Interface BeanPostProcessor接口，在初始化方法别调用前，Spring将把每一个Bean实例分别传递给上述接口的一下两个方法：</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+postProcessAfterInitialization(Object bean, String beanName) :init－method之后被调用
+postProcessBeforeInitialization(Object bean, String beanName) :init－method之前被调用
+	
+	bean：bean实例本身
+	beanName：IOC容器配置的bean名字
+	返回值是实际上返回给用户的Bean， 
+	
+</code></pre>
+</div>
+
+<p>　<strong><em>注意：可以在以上的两个方法中修改返回的Bean，甚至返回一个新的Bean</em></strong>
+ 　</p>
+
+<h5 id="bean-1">添加Bean后置处理器的生命周期</h5>
+
+<ul>
+  <li>通过构造器或工厂方法创建Bean实例</li>
+  <li>为Bean的属性设置值和对其他Bean的引用</li>
+  <li>将Bean实例传递给Bean后置处理器的postProcessBeforeInitialization方法</li>
+  <li>调用Bean的初始化方法</li>
+  <li>将Bean实例传递给Bean后置处理器的postProcessBeforeInitialization方法</li>
+  <li>Bean可以使用</li>
+  <li>当容器关闭时，调用Bean的销毁方法</li>
+</ul>
+
+<h3 id="section-3">主要代码如下</h3>
+
+<h5 id="spring-1">Spring配置文件</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;beans</span> <span class="na">xmlns=</span><span class="s">"http://www.springframework.org/schema/beans"</span>
+	<span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+	<span class="na">xsi:schemaLocation=</span><span class="s">"http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"</span><span class="nt">&gt;</span>
+
+	<span class="nt">&lt;bean</span> <span class="na">id =</span> <span class="s">"car"</span> <span class="na">class=</span><span class="s">"com.wyw.spring.cycle.Car"</span>
+		<span class="na">init-method=</span><span class="s">"init"</span>
+		<span class="na">destroy-method=</span><span class="s">"destroy"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"brand"</span> <span class="na">value=</span><span class="s">"Audi"</span><span class="nt">&gt;&lt;/property&gt;</span>
+	<span class="nt">&lt;/bean&gt;</span>
+	
+	<span class="c">&lt;!-- 配置Bean的后置处理器 ，不需要配置id,IOC自动识别是一个BeanPostProcessor--&gt;</span>
+	<span class="c">&lt;!-- 实现BeanPostProcessor接口，并提供
+	postProcessAfterInitialization(Object bean, String beanName) :init－method之后被调用
+	postProcessBeforeInitialization(Object bean, String beanName) :init－method之前被调用
+	的实现
+	
+	bean：bean实例本身
+	beanName：IOC容器配置的bean名字
+	返回值是实际上返回给用户的Bean，注意：可以在以上的两个方法中修改返回的Bean，甚至返回一个新的Bean
+	 --&gt;</span>
+	<span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">"com.wyw.spring.cycle.MyBeanPostProcessor"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;/bean&gt;</span>
+
+<span class="nt">&lt;/beans&gt;</span>
+
+</code></pre>
+</div>
+
+<h5 id="beanpostprocessor">实现BeanPostProcessor接口的类</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+
+public class MyBeanPostProcessor implements BeanPostProcessor{
+
+	@Override
+	public Object postProcessAfterInitialization(Object bean, String beanName)
+			throws BeansException {
+		System.out.println("postProcessAfterInitialization:"+bean+","+beanName);
+		if("car".equals(beanName)){
+			
+		}
+		return bean;
+	}
+
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName)
+			throws BeansException {
+		System.out.println("postProcessBeforeInitialization:"+bean+","+beanName);
+		Car car = new Car();
+		car.setBrand("BenChi");
+		return car;
+	}	
+}
+
+</code></pre>
+</div>
+
+<h5 id="section-4">控制台输出</h5>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Car's Constructor
+setbrand
+postProcessBeforeInitialization:Car [brand=Audi],car
+Car's Constructor
+setbrand
+init
+postProcessAfterInitialization:Car [brand=BenChi],car
+Car [brand=BenChi]
+destrory
+</code></pre>
+</div>
+
+
+
+                <hr>
+
+                
+
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/04/04/%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%88%97_%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E4%B8%B2_%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/" data-toggle="tooltip" data-placement="top" title="最大子序列&最长公共子串&最长公共子序列 ">
+                        Previous<br>
+                        <span>最大子序列&最长公共子串&最长公共子序列 </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/04/05/maximum_product_of_word_lengths-%E8%AF%91/" data-toggle="tooltip" data-placement="top" title="Maximum Product of Word Lengths ">
+                        Next<br>
+                        <span>Maximum Product of Word Lengths </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#算法" title="算法" rel="2">
+                                    算法
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="7">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#动态规划" title="动态规划" rel="2">
+                                    动态规划
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#c++" title="c++" rel="9">
+                                    c++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#非递归" title="非递归" rel="4">
+                                    非递归
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#二叉树" title="二叉树" rel="4">
+                                    二叉树
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#数据结构" title="数据结构" rel="2">
+                                    数据结构
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://saberzun.github.io">遵达</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "johnnwen";
+    var disqus_identifier = "/2016/04/04/ioc_容器中bean的生命周期";
+    var disqus_url = "http://johnnwen.github.io/2016/04/04/ioc_%E5%AE%B9%E5%99%A8%E4%B8%ADbean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/johnnwen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/johnnwen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/johnnwen2016">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/wenlovexx">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; wangyw Blog 2016
+                    <br>
+                    Theme © <a href="http://johnnwen.github.io">wangyouwen</a> 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- Highlight.js -->
+<script>
+    async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+        hljs.initHighlightingOnLoad();
+    })
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+<link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+
+<!--fastClick.js -->
+<script>
+    async("http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        // var $nav = document.querySelector("nav");
+        // if($nav) FastClick.attach($nav);
+
+        // global FastClick!!
+        FastClick.attach(document.body);    
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

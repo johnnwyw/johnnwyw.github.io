@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Java Android">
+    <meta name="keyword"  content="coding">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>版本控制工具git - 王有文的博客 | johnnwen Blog</title>
+
+    <link rel="canonical" href="http://johnnwen.github.io/2016/04/01/git/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="http://cdn.staticfile.org/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">wangyw Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-digital-native.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-digital-native.jpg')
+    }
+
+    
+    header.intro-header .header-mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: rgba(0,0,0, 0.3);
+    }
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#git" title="git">git</a>
+                        
+                        <a class="tag" href="/tags/#版本控制工具" title="版本控制工具">版本控制工具</a>
+                        
+                    </div>
+                    <h1>版本控制工具git</h1>
+                    
+                    
+                    <h2 class="subheading">git</h2>
+                    
+                    <span class="meta">Posted by johnnwen on April 1, 2016</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<h2 id="section">版本控制工具</h2>
+<p>Git 是一个开源的分布式版本控制工具,它的开发者就是鼎鼎大名的 Linux 操作系统的 作者 Linus Torvalds。Git 被开发出来的初衷本是为了更好地管理 Linux 内核,而现在却早已 被广泛应用于全球各种大中小型的项目中.<br />
+昨天利用Github＋Jekyll搭建了<a href="http://wangyouwen.cn">自己的技术博客</a>，然而以前学了点关于git基本命令几乎记不大清楚了，所写一篇关于git版本控制的博客方便以后查看。<br /></p>
+
+<h3 id="git">安装 Git</h3>
+
+<p>由于 Git 和 Linux 操作系统都是同一个作者,因此不用我说你也应该猜到 Git 在 Linux上的安装是最简单方便的。比如你使用的是 Ubuntu 系统只需要打开 shell 界面,并输入:<br />
+	sudo apt-get install git-core</p>
+
+<p>如果是Mac系统，自带Git,所以无需安装便可以使用了。<br />
+如果Windows操作系统，需要先把 Git 的安装包下载下来。访问网址 http://msysgit.github.io/,可以看到如下图所示的页面。<br />
+<img src="/img/gitdownload.jpg" alt="gitdownload" /></p>
+
+<p>点击网页中央的 Downloads 链接会跳转到的如下图所示的下载列表页面<br />
+<img src="/img/gitdownlist.jpg" alt="gitdownload" /></p>
+
+<p>这里目前最新的 Git 版本是 2.8.0,下载完成后双击安装包进行安装,之后一直点击下一步就可以完成安装了。<br /></p>
+
+<h3 id="section-1">创建代码仓库</h3>
+
+<p>虽然在 Windows 上安装的 Git 是可以在图形界面上进行操作的,但是我觉得掌握Git的各种命令才是硬道理…这样不管你是在哪个操作系统中,使用命令来操作Git必然都是通用的。<br />
+如果是Linux系统 or Mac系统,则打开shell界面,如果使用的是 Windows 系统,就从开始里找到 Git Bash 并打开。
+首先应该配置身份,这样在提交代码的时候 Git 就可以知道是who提交了,命 令如下所示:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git config --global user.name "xxx"
+git config --global user.email "xxx@gmail.com"
+</code></pre>
+</div>
+
+<p>接下来就开始创建代码仓库吧,仓库(Repository)是用于保存版本管理所需信息的地方,所有本地提交的代码都会被提交到代码仓库中,还可以再推送到远程仓库中。<br />
+输入如下命令就可以完成创建代码仓库的操作</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git init
+</code></pre>
+</div>
+
+<p>仓库创建完成后,会在根目录下生成一个隐藏的.git 文件夹, 这个文件夹就是用来记录本地所有的 Git 操作<br /></p>
+
+<h3 id="section-2">提交本地代码</h3>
+
+<p>代码仓库建立完之后就可以提交代码了,只需要使用 add 和 commit 命令。add 是把要提交的代码添加进来,commit 是执行提交的操作。如下命令:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git add 要提交的文件      //git add . 表示添加所有的文件
+git commit －m '提交的描述信息'
+</code></pre>
+</div>
+
+<h3 id="section-3">忽略文件</h3>
+
+<p>Git提供了一种可配性很强的机制允许用户将指定的文件或目录排除在版本控制之外,它会检查代码仓库的根目录下是否存在一个名为.gitignore 的文件,如果存在则逐行读取这个文件中的内容,并把每一行指定的文件或目录排除在版本控制之外。<br />
+<strong>* .gitignore 中指定的文件或目录可以使用“<em>”通配符<br /></em></strong></p>
+
+<h3 id="section-4">查看修改内容</h3>
+
+<p>输入如下命令来查看自上次提交后文件修改的内容:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git status
+</code></pre>
+</div>
+
+<p>输入如下命令查看到所有文件的更改内容:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git diff
+</code></pre>
+</div>
+
+<h3 id="section-5">撤销未提交的修改</h3>
+
+<p>输入如下命令撤销未提交的修改</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git checkout 
+</code></pre>
+</div>
+
+<p>不过这种撤销方式只适用于那些还没有执行过 add 命令的文件,如果某个文件已经被添加过了,这种方式就无法撤销其更改的内容,对于已添加的文件应该先对其取消添加,然后才可以撤回提交。取消添加使用的是reset命令,用法如下所示:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git reset HEAD
+</code></pre>
+</div>
+
+<h3 id="section-6">查看提交记录</h3>
+
+<p>Git 帮我们清清楚楚地记录着修改的内容，使用 log 命令查看历史提交信息,用法如下所示,如果想要查看这条提交记录具体修改了什么内容,可以在命令中加入-p 参数:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git log
+</code></pre>
+</div>
+
+<h3 id="section-7">分支的用法</h3>
+
+<p>工具中比较高级且比较重要的一个概念,它主要的作用就是在现有代码 的基础上开辟一个分叉口,使得代码可以在主干线和分支线上同时进行开发,且相互之间不会影响。查看当前的版本库当中有哪些分支,可以使用 git branch –a 这个命令:<br /></p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git branch –a 
+</code></pre>
+</div>
+
+<p>创建了一个名为 version1.0 的分支</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git branch version1.0
+</code></pre>
+</div>
+
+<p>切换到 version1.0 这 个分支</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git checkout version1.0
+</code></pre>
+</div>
+
+<p><strong><em>注意,在 version1.0 分支上修改并提交的代码将不会影响到 master 分支。同样 的道理,在 master 分支上修改并提交的代码也不会影响到 version1.0 分支。因此,如果我们 在 version1.0 分支上修复了一个 bug,在 master 分支上这个 bug 仍然是存在的。这时将修改的代码一行行复制到 master 分支上不太现实，最好的办法就是使用 merge 命令来完成合并操作,如下所示:</em></strong></p>
+
+ 	git checkout master
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git merge version1.0
+</code></pre>
+</div>
+
+<p>最后,当我们不再需要 version1.0 这个分支的时候,可以使用如下命令将这个分支删除掉:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git branch -D version1.0
+</code></pre>
+</div>
+
+<h3 id="section-8">与远程版本库协作</h3>
+
+<p>使用如下的命令将代码下载到本地:
+	git clone 远程版本库的 Git 地址
+本地修改的内容同步到远程版本库上使用push命令来完成,用法如下所示:
+	git push origin master
+将远程版本库上的修改同步到本地使用Git提供了两种命令来完成,分别是 fetch 和 pull,如下所示:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git fetch origin master
+</code></pre>
+</div>
+
+<p>执行这个命令后,就会将远程版本库上的代码同步到本地,但是同步下来的代码并不会合并到任何分支上去,而是会存放在到一个 origin/master 分支上,这时我们可以通过 diff 命令来查看远程版本库上修改了哪些东西:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git diff origin/master
+</code></pre>
+</div>
+
+<p>再调用 merge 命令将 origin/master 分支上的修改合并到主分支上即可,如下所示:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git merge origin/master
+</code></pre>
+</div>
+
+<p>pull 命令则是相当于将 fetch 和 merge 这两个命令放在一起执行了,它可以从远程版本库上获取最新的代码并且合并到本地,用法如下所示:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>git pull origin master
+</code></pre>
+</div>
+
+<p><strong><em>这些都是对远程版本库的使用的几本命令,赶快实践吧….</em></strong></p>
+
+
+
+                <hr>
+
+                
+
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2016/03/31/stockvi/" data-toggle="tooltip" data-placement="top" title="Best Time to Buy and Sell Stock IV">
+                        Previous<br>
+                        <span>Best Time to Buy and Sell Stock IV</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/04/01/leetcode171/" data-toggle="tooltip" data-placement="top" title="Excel Sheet Column Number">
+                        Next<br>
+                        <span>Excel Sheet Column Number</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#算法" title="算法" rel="2">
+                                    算法
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="7">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#动态规划" title="动态规划" rel="2">
+                                    动态规划
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#c++" title="c++" rel="9">
+                                    c++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#非递归" title="非递归" rel="4">
+                                    非递归
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#二叉树" title="二叉树" rel="4">
+                                    二叉树
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#数据结构" title="数据结构" rel="2">
+                                    数据结构
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://saberzun.github.io">遵达</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "johnnwen";
+    var disqus_identifier = "/2016/04/01/git";
+    var disqus_url = "http://johnnwen.github.io/2016/04/01/git/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/johnnwen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/johnnwen">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/johnnwen2016">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/wenlovexx">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; wangyw Blog 2016
+                    <br>
+                    Theme © <a href="http://johnnwen.github.io">wangyouwen</a> 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- Highlight.js -->
+<script>
+    async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+        hljs.initHighlightingOnLoad();
+    })
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+<link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+
+<!--fastClick.js -->
+<script>
+    async("http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        // var $nav = document.querySelector("nav");
+        // if($nav) FastClick.attach($nav);
+
+        // global FastClick!!
+        FastClick.attach(document.body);    
+    })
+</script>
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
