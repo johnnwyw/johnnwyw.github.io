@@ -5,7 +5,7 @@ header-img: img/wangyw_backgrond.jpg
 email: 13021008001@163.com
 description: "Java Android"
 keyword: "wangyouwen, 王有文, johnnwen, 王有文的博客, johnnwen Blog, 博客, 个人博客, 互联网, Java, Android"
-url: "http://johnnwen.github.io"              # your host, for absolute URL
+url: "http://johnnwyw.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 
