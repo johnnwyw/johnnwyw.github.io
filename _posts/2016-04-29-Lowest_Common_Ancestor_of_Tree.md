@@ -2,7 +2,7 @@
 layout:     post
 title:      "Lowest Common Ancestor of Tree "
 subtitle:   "  "
-date:       2016-04-29 08:00:00
+date:       2016-04-28 12:00:00
 author:     "Johnnwen"
 header-img: "img/post-bg-kb4.jpg"
 catalog:    true
