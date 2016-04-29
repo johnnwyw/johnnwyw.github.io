@@ -1,10 +1,10 @@
 # Site settings
 title: wangyw Blog
-SEOTitle: 王有文的博客 | johnnwen Blog
+SEOTitle: 王有文的博客 | johnnwyw Blog
 header-img: img/wangyw_backgrond.jpg
 email: 13021008001@163.com
 description: "Java Android"
-keyword: "wangyouwen, 王有文, johnnwen, 王有文的博客, johnnwen Blog, 博客, 个人博客, 互联网, Java, Android"
+keyword: "wangyouwen, 王有文, johnnwyw, 王有文的博客, johnnwyw Blog, 博客, 个人博客, 互联网, Java, Android"
 url: "http://johnnwyw.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
@@ -62,7 +62,7 @@ duoshuo_share: true                     # set to false if you want to use Commen
 ba_track_id: 28d333d77e29c85b9d1b7aa5478291b1
 # Google Analytics
 ga_track_id: 'UA-76117582-1'            # Format: UA-xxxxxx-xx
-ga_domain: http://wenlovexx.github.io
+ga_domain: http://johnnwyw.github.io
 
 
 
