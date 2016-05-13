@@ -25,7 +25,7 @@ A happy number is a number defined by the following process: Starting with any p
 
 **Example:** 19 is a happy number
 
-1_{2} + 9^{2} = 82
+1^{2} + 92 = 82
 
 82 + 22 = 68
 
