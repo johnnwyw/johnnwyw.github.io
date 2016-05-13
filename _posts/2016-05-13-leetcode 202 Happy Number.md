@@ -25,7 +25,7 @@ A happy number is a number defined by the following process: Starting with any p
 
 **Example:** 19 is a happy number
 
-$1^{2} + 92 = 82
+1_{2} + 9^2 = 82
 
 82 + 22 = 68
 
@@ -39,7 +39,7 @@ $1^{2} + 92 = 82
 * 同计算循环小数一样, 如果出现循环, 则无需继续计算,直接返回false即可. 
 * 否则循环计算每位数字的平方和，直到出现结果为1
 
-##### 代码(递归解法)
+##### 代码
 
 ```
 
