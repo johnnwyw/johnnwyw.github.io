@@ -1,0 +1,109 @@
+---
+layout:     post
+title:      "leetcode 349. Intersection of Two Arrays   "
+subtitle:   "  "
+date:       2016-05-25 08:00:00
+author:     "Johnnwen"
+header-img: "img/post-bg-kb4.jpg"
+catalog:    true
+tags:
+    - leetcode
+    - 数据结构
+    - c++
+  
+    
+---
+
+
+### leetcode 349. Intersection of Two Arrays 
+
+#### 题意
+
+Given two arrays, write a function to compute their intersection.
+
+**Example:**
+Given nums1 = [1, 2, 2, 1], nums2 = [2, 2], return [2].
+
+***Note:***
+
+* Each element in the result must be unique.
+* The result can be in any order.
+
+##### 分析
+
+* 同计算循环小数一样, 如果出现循环, 则无需继续计算,直接返回false即可. 
+* 否则循环计算每位数字的平方和，直到出现结果为1
+
+##### 代码
+
+###### 解法一（map&&set应用）
+
+```
+class Solution {
+    
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        
+        if(nums1.size() == 0 || nums2.size() == 0){
+            return vector<int>();
+        }
+        
+        map<int,bool> tmp;
+        vector<int> res;
+        set<int> nums;
+        
+        for(int i = 0;i<nums1.size();i++){
+            tmp[nums1[i]] = true;
+        }
+        
+        for(int i = 0;i<nums2.size();i++){
+            if(tmp[nums2[i]] == true){
+                
+                nums.insert(nums2[i]);
+            }
+        }
+        
+        set<int>::iterator it = nums.begin();
+        
+        while(it!=nums.end()){
+            res.push_back(*it);
+            it++;
+        }
+        
+        
+        return res;
+    }
+};
+
+```
+
+```
+
+###### 解法二（排序sort）
+
+class Solution {  
+public:  
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {  
+        sort(nums1.begin(), nums1.end());  
+        sort(nums2.begin(), nums2.end());  
+        vector<int> res;  
+        int i = 0, j = 0;  
+        while (i < nums1.size() && j < nums2.size())  
+        {  
+            if (nums1[i] < nums2[j])  
+                i++;  
+            else if (nums1[i] > nums2[j])  
+                j++;  
+            else  
+            {
+                if (res.size() == 0 || res.back() != nums1[i])  
+                    res.push_back(nums1[i]);  
+                i++;  
+                j++;  
+            }  
+        }  
+        return res;  
+    }  
+};  
+
+```
