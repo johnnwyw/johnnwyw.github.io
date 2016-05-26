@@ -68,8 +68,7 @@ class Solution {
 ###### 解法二（map应用）
 
 ```
-class Solution {
-    
+class Solution {  
 public:
     vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
         
@@ -94,9 +93,11 @@ public:
         return res;
     }
 };
-
 ```
-###### 解法三（排序sort）
+
+
+
+###### 解法三(sort排序)
 
 ```
 class Solution {  
@@ -123,8 +124,9 @@ public:
         return res;  
     }  
 };  
-
 ```
+
+
 
 #### 扩展 leetcode 350. Intersection of Two Arrays II
 
@@ -177,6 +179,7 @@ class Solution {
 
 ###### 解法二（排序sort）
  
+
 ```
 class Solution {  
 public:  
@@ -203,6 +206,7 @@ public:
     }  
 };
 ```
+
 
 ###### 解法三（map应用）
 
