@@ -64,7 +64,7 @@ class Solution {
      }
  };
  
- ```
+```
  
 
 ###### 解法二（map应用)
@@ -97,7 +97,6 @@ public:
     }
 };
  
-
 ```
 
 
@@ -183,6 +182,7 @@ class Solution {
          return res;
      }
 };
+
 ```
 
 ###### 解法二（排序sort）
@@ -213,6 +213,7 @@ public:
         return res;  
     }  
 };
+
 ```
 
 
@@ -238,6 +239,7 @@ public:
          return res;
      }
 };
+
 ```
 
 
