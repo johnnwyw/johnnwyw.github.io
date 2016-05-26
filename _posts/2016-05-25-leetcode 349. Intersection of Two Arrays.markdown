@@ -148,7 +148,9 @@ The result can be in any order.
 * What if elements of nums2 are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?
 
 ##### 代码
+
 ###### 解法一（暴力法）
+
 
 ```
 class Solution {
@@ -170,8 +172,9 @@ class Solution {
          }
          return res;
      }
- };
+};
 ```
+
 ###### 解法二（排序sort）
  
 ```
