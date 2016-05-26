@@ -67,11 +67,11 @@ class Solution {
  ```
  
 
-###### 解法二（map应用）
+###### 解法二（map应用)
 
 
 ```
-class Solution {  
+class Solution {
 public:
     vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
         
@@ -96,6 +96,8 @@ public:
         return res;
     }
 };
+ 
+
 ```
 
 
