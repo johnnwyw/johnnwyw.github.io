@@ -101,10 +101,9 @@ public:
 
 ```
 
-```
-
 ###### 解法三（排序sort）
 
+```
 class Solution {  
 public:  
     vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {  
