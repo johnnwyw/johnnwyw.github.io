@@ -61,12 +61,8 @@ public:
 class Solution {  
 private:  
     void dfs(int i, vector<int>& nums,vector<vector<int>>& res) {  
-        if(i==nums.size()) {
-            vector<int> tmp;
-            for(int j=0;j<nums.size();j++) {  
-                tmp.push_back(nums[j]);  
-            }  
-            res.push_back(tmp);  
+        if(i==nums.size()) { 
+            res.push_back(nums);  
             return;  
         }  
         for(int j=i;j<nums.size();j++) {  
