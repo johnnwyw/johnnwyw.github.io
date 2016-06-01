@@ -1,0 +1,57 @@
+---
+layout:     post
+title:      "Tomcat安装和配置 "
+subtitle:   "  "
+date:       2016-06-01 09:00:00
+author:     "Johnnwen"
+header-img: "img/post-bg-kb4.jpg"
+catalog:    true
+tags:
+    - Web
+    - Java
+  
+    
+---
+
+
+### omcat安装和配置
+
+1. 部署并启动tomcat服务器。
+
+	（1） 解压apache-tomcat-x.x.x.zip到一个非中文目录下
+	（2） 配置环境变量：java_home（jre_home）指向JDK的安装根目录
+	（3） 通过双击apache-tomcat-x.x.x\bin目录下的start.bat启动服务器
+	（4） 可以在浏览器中输入localhost://8080来检验Tomcat是否安装正确
+	（5） 若启动了一个Tomcat应用，在启动一个tomcat应用时会抛出异常：java.net.BindException:Address already in use:JVM_Bind:8080
+	
+	
+2. Tomcat :开源的Servlet容器
+3. 可以通过修改server.xml文件修改Tomcat服务器的端口号：
+
+		<Connector port = "8181" protocol = "HTTP/1.1" connectionTimeout="20000" redirectPort=8443""/>
+		
+4.  为了在任意目录下启动Tomcat服务器，可以把apache-tomcat-x.x.x\bin添加到path下
+5.  启动tomcat的服务器是catalina.sh文件
+6.  在命令行输入catalina.sh提示如下：
+
+	```
+debug             Start Catalina in a debugger
+  debug -security   Debug Catalina with a security manager
+  jpda start        Start Catalina under JPDA debugger
+  run               Start Catalina in the current window
+  run -security     Start in the current window with security manager
+  start             Start Catalina in a separate window
+  start -security   Start in a separate window with security manager
+  stop              Stop Catalina, waiting up to 5 seconds for the process to end
+  stop n            Stop Catalina, waiting up to n seconds for the process to end
+  stop -force       Stop Catalina, wait up to 5 seconds and then use kill -KILL if still running
+  stop n -force     Stop Catalina, wait up to n seconds and then use kill -KILL if still running
+  configtest        Run a basic syntax check on server.xml - check exit code for result
+  version           What version of tomcat are you running?
+	```
+
+
+
+
+
+
