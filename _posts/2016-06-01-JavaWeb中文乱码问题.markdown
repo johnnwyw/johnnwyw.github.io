@@ -1,0 +1,32 @@
+---
+layout:     post
+title:      "JavaWeb中文乱码问题 "
+subtitle:   "  "
+date:       2016-06-01 08:00:00
+author:     "Johnnwen"
+header-img: "img/post-bg-kb4.jpg"
+catalog:    true
+tags:
+    - Web
+    - Java
+  
+    
+---
+
+
+### JavaWeb中文乱码问题
+
+1. 在JSP页面中输入中文，请求参页面后不出现乱码：保证<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> charset和pageEncoding编码一致，且都支持中文，通常建议取值UTF－8，还需要保证浏览器的字符编码也和JSP的页面编码一致。
+2. 获取中文参数值：默认参数在传输过程中使用的编码是ISO－8859-1
+
+	1）对于POST请求：只需要在获取请求信息之前（request.getparameter或者是request.getReader），调用request.setCharacterEncoding("UTF-8")即可
+	
+	2）对于GET请求：前面的方式对于GET无效：可以通过修改Tomcat的server.xml文件的方式。参照http://localhost:8989/docs/config/index.html文档的useBodyEncodingForURl属性，为Connector节点添加useBodyEncodingForURl＝“true”属性即可，映射的server.xml也需要相应的修改。还可以做如下编码转化修改：
+	
+		String val  = request.getParameter("username");
+		String username = new String(val.getBytes("iso-8859-1"),"UTF-8"); 
+		
+
+
+
+
