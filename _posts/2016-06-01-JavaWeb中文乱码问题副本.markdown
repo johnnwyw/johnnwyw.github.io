@@ -19,10 +19,16 @@ tags:
 1. 部署并启动tomcat服务器。
 
 	（1） 解压apache-tomcat-x.x.x.zip到一个非中文目录下
+	
 	（2） 配置环境变量：java_home（jre_home）指向JDK的安装根目录
+	
 	（3） 通过双击apache-tomcat-x.x.x\bin目录下的start.bat启动服务器
+	
 	（4） 可以在浏览器中输入localhost://8080来检验Tomcat是否安装正确
-	（5） 若启动了一个Tomcat应用，在启动一个tomcat应用时会抛出异常：java.net.BindException:Address already in use:JVM_Bind:8080
+	
+	（5） 若启动了一个Tomcat应用，在启动一个tomcat应用时会抛出异常：
+	
+		java.net.BindException:Address already in use:JVM_Bind:8080
 	
 	
 2. Tomcat :开源的Servlet容器
