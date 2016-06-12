@@ -19,6 +19,7 @@ tags:
 1. 在JSP页面中输入中文乱码
 
 请求参页面后不出现乱码：保证<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> charset和pageEncoding编码一致，且都支持中文，通常建议取值UTF－8，还需要保证浏览器的字符编码也和JSP的页面编码一致。
+
 2. 获取中文参数值乱码
 
 默认参数在传输过程中使用的编码是ISO－8859-1
