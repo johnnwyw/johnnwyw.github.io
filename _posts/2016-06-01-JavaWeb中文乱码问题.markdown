@@ -16,8 +16,12 @@ tags:
 
 ### JavaWeb中文乱码问题
 
-1. 在JSP页面中输入中文，请求参页面后不出现乱码：保证<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> charset和pageEncoding编码一致，且都支持中文，通常建议取值UTF－8，还需要保证浏览器的字符编码也和JSP的页面编码一致。
-2. 获取中文参数值：默认参数在传输过程中使用的编码是ISO－8859-1
+1. 在JSP页面中输入中文乱码
+
+请求参页面后不出现乱码：保证<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> charset和pageEncoding编码一致，且都支持中文，通常建议取值UTF－8，还需要保证浏览器的字符编码也和JSP的页面编码一致。
+2. 获取中文参数值乱码
+
+默认参数在传输过程中使用的编码是ISO－8859-1
 
 	1）对于POST请求：只需要在获取请求信息之前（request.getparameter或者是request.getReader），调用request.setCharacterEncoding("UTF-8")即可
 	
@@ -26,6 +30,14 @@ tags:
 		String val  = request.getParameter("username");
 		String username = new String(val.getBytes("iso-8859-1"),"UTF-8"); 
 		
+		
+3.  数据库操作乱码
+
+只需要如下配置，指定字符的编码、解码格式和页面的编码格式一致
+
+	jdbc.jdbcUrl=jdbc:mysql://127.0.0.1:3306/mydbuseUnicode=true&characterEncoding=utf8
+		
+
 
 
 
