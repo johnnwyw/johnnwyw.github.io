@@ -31,6 +31,8 @@ tags:
 		String val  = request.getParameter("username");
 		String username = new String(val.getBytes("iso-8859-1"),"UTF-8"); 
 		
+	创建统一的字符编码过滤器
+		
 		
 3.  数据库操作乱码
 
