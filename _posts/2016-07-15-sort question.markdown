@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "Binary Tree Level Traversal "
+title:      "排序算法"
 subtitle:   "  "
 date:       2016-07-15 09:00:00
 author:     "Johnnwen"
