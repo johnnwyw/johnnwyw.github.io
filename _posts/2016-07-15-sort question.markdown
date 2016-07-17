@@ -149,5 +149,89 @@ int main(int argc, const char * argv[]) {
 
 ```
 
+### 3. 对排序
+
+```
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+
+//堆筛选函数，调整为一个大顶堆
+typedef int ElemType;
+void heapAdjust(vector<ElemType> &nums, int start, int end)
+{
+    
+    ElemType temp = nums[start];
+    //因为假设根结点的序号为0而不是1，所以i结点左孩子为2i+1
+    int i = 2*start+1;
+    
+    while(i<=end)
+    {
+        if(i<end && nums[i]<nums[i+1])//左右孩子的比较
+        {
+            i++;//i为较大的记录的左孩子下标
+        }
+        
+        if(temp > nums[i])//左右孩子中较大者与父节点比较
+        {
+            break;
+        }
+        
+        //将孩子结点赋值给父节点，以孩子结点的位置进行下一轮的筛选
+        nums[start]= nums[i];
+        start = i;
+        i = 2*i + 1;
+        
+    }
+    
+    nums[start]= temp; //插入最开始不和谐的节点
+}
+
+void heapSort(vector<int> &nums,int n)
+{
+    //1.建立大顶堆
+    for(int i=(n/2-1); i>=0; i--)
+    {
+        heapAdjust(nums,i,n-1);
+    }
+    //2.进行排序
+    for(int i=n-1; i>0; --i)
+    {
+        //最后一个元素和第一元素进行交换
+        ElemType temp=nums[i];
+        nums[i] = nums[0];
+        nums[0] = temp;
+        
+        //剩下的无序元素继续调整为大顶堆
+
+        heapAdjust(nums,0,i-1);
+    }
+    
+}
+
+
+
+int main(int argc, const char * argv[]) {
+    vector<ElemType> nums= {1,2,5,8,7,55,10};
+    
+    
+ 
+    heapSort(nums,(int)nums.size());
+    
+    cout<<"after sorted:"<<endl;
+    for(int j = 0;j < 7;j++){
+        cout<<nums[j]<<", ";
+    }
+    
+    cout<<endl;
+    
+    return 0;
+}
+
+```
+
 
 
