@@ -149,7 +149,7 @@ int main(int argc, const char * argv[]) {
 
 ```
 
-### 3. 对排序
+### 3. 堆排序
 
 ```
 
